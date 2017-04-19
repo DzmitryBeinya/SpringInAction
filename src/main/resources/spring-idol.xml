@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                                                                                                                                                                                                                                                                   xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <context:annotation-config />
+    <aop:aspectj-autoproxy>
+        <aop:include name="audience"/>
+    </aop:aspectj-autoproxy>
+
+    <!-- Здесь должны находиться объявления компонентов -->
+    <bean id="duke" class="chapter2.PoeticJuggler" autowire="constructor">
+
+    </bean>
+
+    <bean id="sonnet29" class="chapter2.Sonnet29"/>
+
+    <bean id="theStage" class="chapter2.Stage"
+          factory-method="getInstance"/>
+
+    <bean id="saxophone" class="chapter2.Saxophone"/>
+
+
+
+
+
+    <bean id="piano" class="chapter2.Piano"/>
+
+    <bean id="eddie" class="chapter2.PoeticJuggler">
+        <constructor-arg name="poem" ref="sonnet29"/>
+    </bean>
+
+    <bean id="kenny" class="chapter2.Instrumentalist">
+        <constructor-arg name="instrument" ref="piano"/>
+        <constructor-arg name="song" value="dvfjkds"/>
+    </bean>
+
+
+    <bean id="audience" class="chapter2.Audience"/>
+
+    <bean id="audienceXML" class="chapter2.AudienceXML"/>
+    <aop:config>
+        <aop:aspect ref="audience">
+            <aop:pointcut id="performance" expression="execution(* chapter2.Performer.perform())"/>
+            <aop:before pointcut-ref="performance" method="takeSeats"/>
+            <aop:before pointcut-ref="performance" method="turnOffCellPhones"/>
+            <aop:after pointcut-ref="performance" method="applaud"/>
+        </aop:aspect>
+    </aop:config>
+
+    <bean id="magician" class="chapter2.Magician"/>
+
+    <aop:config>
+        <aop:aspect ref="magician">
+            <aop:pointcut id="thinking" expression="execution(* chapter2.Thinker.thinkOfSomething(String))
+             and args(thoughts)"/>
+            <aop:before pointcut-ref="thinking" method="interceptThoughts"
+                        arg-names="thoughts"/>
+        </aop:aspect>
+
+    </aop:config>
+
+
+
+
+    <bean id="songSelector" class="chapter2.SongSelector"/>
+
+
+    <bean id="hank" class="chapter2.OneManBand">
+        <property name="instruments">
+            <map>
+                <entry key="piano" value-ref="piano"/>
+                <entry key="saxophone" value-ref="saxophone"/>
+            </map>
+        </property>
+    </bean>
+
+
+
+
+</beans>
