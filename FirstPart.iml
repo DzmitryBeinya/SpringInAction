@@ -12,6 +12,7 @@
           <file>file://$MODULE_DIR$/src/main/resources/testUserResources/Spring-User.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/testUserResources/Spring-Module.xml</file>
           <file>file://$MODULE_DIR$/src/main/resources/testUserResources/Spring-Datasource.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/testUserResources/Spring-Student.xml</file>
         </fileset>
       </configuration>
     </facet>

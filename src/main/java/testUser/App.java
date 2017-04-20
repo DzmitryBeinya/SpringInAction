@@ -4,6 +4,8 @@ import SpringJDBCExample.CustomerDAO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import testUser.DAO.UserDAO;
+import testUser.DAO.impl.StudentDao;
+import testUser.entities.Student;
 import testUser.entities.User;
 
 public class App
@@ -13,10 +15,13 @@ public class App
         ApplicationContext context =
                 new ClassPathXmlApplicationContext("testUserResources/Spring-Module.xml");
 
-        UserDAO userDAO = (UserDAO) context.getBean("userDAO");
+        StudentDao studentDao = (StudentDao) context.getBean("studentDao");
 
-        User user = userDAO.selectUserByName("Slava");
-        System.out.println(user);
+        for (int i = 1; i <= 10; i++) {
+            Student student = studentDao.selectStudentByIdWithJDBCTemplate(i);
+            System.out.println(student);
+        }
+
 
     }
 }

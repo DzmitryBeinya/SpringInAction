@@ -2,6 +2,8 @@ package testUser.DAO.impl;
 
 import SpringJDBCExample.Customer;
 import testUser.DAO.UserDAO;
+import testUser.entities.Room;
+import testUser.entities.Student;
 import testUser.entities.User;
 
 import javax.sql.DataSource;
@@ -52,6 +54,84 @@ public class JDBCUserDAO implements UserDAO {
                 } catch (SQLException e) {}
             }
         }
+    }
 
+    @Override
+    public Student selectStudentById(int id) {
+        String sql = "select * from student where id = ?";
+
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            Student student= null;
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                student = new Student(
+                        rs.getInt("id"),
+                        rs.getString("st_name"),
+                        rs.getString("st_surname"),
+                        rs.getString("st_university"),
+                        rs.getString("st_faculty"),
+                        rs.getString("st_group")
+                );
+                student.setRoom(getRoomByStudentId(id));
+            }
+            rs.close();
+            ps.close();
+
+            return student;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
+    }
+
+    @Override
+    public Student selectStudentByIdWithJDBCTemplate(int id) {
+        return null;
+    }
+
+    private Room getRoomByStudentId(int id){
+        String sql = "select r.ro_number,r.ro_places,r.ro_free_places, r.ro_floor from room r\n" +
+                "join student st\n" +
+                "on st.st_room = r.ro_number\n" +
+                "where st.id = ?";
+
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            Room room = null;
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                room = new Room(
+                        rs.getString("ro_number"),
+                        rs.getInt("ro_places"),
+                        rs.getInt("ro_free_places"),
+                        rs.getInt("ro_floor")
+                );
+            }
+            rs.close();
+            ps.close();
+            return room;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
     }
 }
